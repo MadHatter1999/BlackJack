@@ -23,6 +23,10 @@ var Dealer={
 
 };
 
+document.getElementById('btnStart').addEventListener("click",StartGame);
+document.getElementById('hit').addEventListener("click",Hit);
+document.getElementById('stay').addEventListener("click",Stay);
+
 var cards={ACE:'ACE',KING:'KING',QUEEN:'QUEEN',JACK:'JACK',TEN:'10',NINE:'9',EIGHT:'8',SEVEN:'7',SIX:'6',FIVE:'5',FOUR:'4',THREE:'3',TWO:'2',ONE:'1'};
 
 //This Starts the game
@@ -50,7 +54,7 @@ function StartGame(){
                      Deck= Data.deck_id;
                      BeginHits(Player,Data.deck_id);
                      BeginHits(Dealer,Data.deck_id);
-                     Has_Won();
+                     HasWon();
                 }
                 else{
                     alert("Somthing went wrong");
@@ -63,7 +67,6 @@ function StartGame(){
     else{
         EndGame();
     }
-    
 }
 
 
@@ -83,8 +86,8 @@ function Hit(){
                         card= await JSON.parse(xhttp.responseText);
                         Player.Cards.innerHTML+="<img src='"+card.cards[0].image+"'>";
                         Player.Hand.push(card.cards[0].value);
-                        Calculate_Scores(Player);
-                        Has_Won(false);
+                        CalculateScores(Player);
+                        HasWon(false);
                         
                     }
                     else{
@@ -112,8 +115,8 @@ function BeginHits(user,Deck_ID){
                         user.Hand.push(card.cards[1].value);
                         user.Cards.innerHTML+="<img src='"+card.cards[0].image+"'>";
                         user.Cards.innerHTML+="<img src='"+card.cards[1].image+"'>";
-                        Calculate_Scores(user);
-                        Has_Won(false);
+                        CalculateScores(user);
+                        HasWon(false);
 
                     }
                     else{
@@ -141,8 +144,8 @@ function Stay(){
                         card= await JSON.parse(xhttp.responseText);
                         Dealer.Hand.push(card.cards[0].value);
                         Dealer.Cards.innerHTML+="<img src='"+card.cards[0].image+"'>";
-                        Calculate_Scores(Dealer);
-                        Has_Won(true);
+                        CalculateScores(Dealer);
+                        HasWon(true);
                         LockControls();
                     }
                     else{
@@ -156,11 +159,16 @@ function Stay(){
     }
 
 }
+
+
+
+
+
 /*
 Logic
 */
 
-// Ends the match and 
+//
 function EndMatch(Message){
     Banner.innerHTML=Message;
     has_Started=false;
@@ -170,7 +178,7 @@ function EndMatch(Message){
 }
 
 //Checks if WON
-function Has_Won(From_Stay){
+function HasWon(From_Stay){
 
     if(From_Stay){
         if((Player.Score> Dealer.Score && Player.Score<=21) || Dealer.Score > 21){
@@ -199,7 +207,7 @@ function Has_Won(From_Stay){
      
 }
 //Calculate scores
-function Calculate_Scores(user){   
+function CalculateScores(user){   
         var count=0;
         user.Score=0;
         for(var card in user.Hand){
@@ -255,7 +263,7 @@ function EndGame(){
         Player_UI.innerHTML="Player:"+Player.Score;
 
         Banner.innerHTML="Let's Play Blackjack";
-
+        
         Player.Cards.innerHTML=" ";
         Dealer.Cards.innerHTML=" ";
     }
